@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="scroll-behavior: smooth">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -7,14 +7,7 @@
     <title>Document</title>
   </head>
   <body>
-    <div
-      style="
-        height: 1100px;
-        background-color: beige;
-        -webkit-overflow-scrolling: touch;
-        overflow-y: scroll;
-      "
-    >
+    <div style="height: 1100px; background-color: beige">
       <div>
         <h1>iframe 테스트</h1>
       </div>
@@ -24,12 +17,13 @@
           width: 100%;
           height: 700px;
           border: 1px solid blue;
+          overflow: auto;
           -webkit-overflow-scrolling: touch;
-          overflow-y: scroll;
         "
       >
         <iframe
-          frameborder="1"
+          id="my-iframe"
+          frameborder="0"
           width="100%"
           height="100%"
           src="//cccv.to"
@@ -45,5 +39,41 @@
         이용 확인 SMTOWN &STORE의 모든 콘텐츠는 저작권의 보호를 받고 있습니다.
       </div>
     </div>
+    <script>
+      // 부모 요소를 스크롤할 때 실행할 함수
+      function onParentScroll() {
+        // iframe 요소를 가져옵니다.
+        var iframe = document.getElementById("my-iframe");
+
+        // iframe의 스크롤 위치가 0 이하인 경우, 스크롤 위치를 0으로 설정합니다.
+        if (iframe.contentWindow.pageYOffset < 0) {
+          iframe.contentWindow.scrollTo(0, 0);
+        }
+
+        // 부모 요소의 스크롤 위치를 iframe의 스크롤 위치로 설정합니다.
+        iframe.style.top = -iframe.contentWindow.pageYOffset + "px";
+      }
+
+      // iframe 요소를 스크롤할 때 실행할 함수
+      function onIframeScroll() {
+        // iframe 요소를 가져옵니다.
+        var iframe = document.getElementById("my-iframe");
+
+        // iframe의 내용의 높이와 스크롤 위치가 같거나 큰 경우, 부모 요소를 스크롤합니다.
+        if (
+          iframe.contentWindow.document.body.offsetHeight <=
+          iframe.contentWindow.pageYOffset + iframe.offsetHeight
+        ) {
+          window.scrollTo(0, window.pageYOffset + 1);
+        }
+      }
+
+      // 부모 요소의 스크롤 이벤트를 감지합니다.
+      window.addEventListener("scroll", onParentScroll);
+
+      // iframe 요소의 스크롤 이벤트를 감지합니다.
+      var iframe = document.getElementById("my-iframe");
+      iframe.contentWindow.addEventListener("scroll", onIframeScroll);
+    </script>
   </body>
 </html>
